@@ -1,0 +1,36 @@
+﻿<Window x:Class="ThreadTask2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ThreadTask2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox FontSize="16" Width="200"
+                         Text="{Binding NewValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <Button Width="50" Command="{Binding AddValueCommand}">ADD</Button>
+            </StackPanel>
+            <ListView Margin="10"
+                      Height="350"
+                      ItemsSource="{Binding Values,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+
+            </ListView>
+        </StackPanel>
+        <StackPanel>
+            <ListView Height="350"
+                      ItemsSource="{Binding Keys,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                
+            </ListView>
+            <StackPanel Orientation="Horizontal">
+                <Button Padding="8,3" Margin="10,5" FontSize="18">Play</Button>
+                <Button Padding="8,3" Margin="10,5" FontSize="18">Pause</Button>
+                <Button Padding="8,3" Margin="10,5" FontSize="18">Resume</Button>
+                <Button Padding="8,3" Margin="10,5" FontSize="18">Stop</Button>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Window>

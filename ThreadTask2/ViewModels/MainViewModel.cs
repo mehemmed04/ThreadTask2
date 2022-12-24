@@ -50,13 +50,11 @@ namespace ThreadTask2.ViewModels
 
         public MainViewModel()
         {
-            thread = new Thread(() =>
-            {
-                timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-                timer.Tick += StartCoding;
-                timer.Start();
-            });
-            thread.Start();
+
+            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            timer.Tick += StartCoding;
+            timer.Start();
+
             Keys = new ObservableCollection<string>();
             Values = new ObservableCollection<string>();
 
@@ -72,6 +70,7 @@ namespace ThreadTask2.ViewModels
             (p) =>
             {
                 return !timer.IsEnabled;
+
             });
 
 

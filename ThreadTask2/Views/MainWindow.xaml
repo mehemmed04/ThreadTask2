@@ -26,10 +26,10 @@
                 
             </ListView>
             <StackPanel Orientation="Horizontal">
-                <Button Padding="8,3" Margin="10,5" FontSize="18">Play</Button>
-                <Button Padding="8,3" Margin="10,5" FontSize="18">Pause</Button>
-                <Button Padding="8,3" Margin="10,5" FontSize="18">Resume</Button>
-                <Button Padding="8,3" Margin="10,5" FontSize="18">Stop</Button>
+                <Button Command="{Binding PlayCommand}" Padding="8,3" Margin="10,5" FontSize="18">Play</Button>
+                <Button Command="{Binding PauseCommand}"  Padding="8,3" Margin="10,5" FontSize="18">Pause</Button>
+                <Button Command="{Binding ResumeCommand}"  Padding="8,3" Margin="10,5" FontSize="18">Resume</Button>
+                <Button Command="{Binding StopCommand}"  Padding="8,3" Margin="10,5" FontSize="18">Stop</Button>
             </StackPanel>
         </StackPanel>
     </StackPanel>

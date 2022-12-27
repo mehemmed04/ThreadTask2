@@ -9,11 +9,32 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using ThreadTask2.Commands;
+using ThreadTask2.Services;
 
 namespace ThreadTask2.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        public void StartCoding()
+        {
+            while (true)
+            {
+                if (Values.Count > 0)
+                {
+                    for (int i = 0; i < Values.Count; i++)
+                    {
+                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        {
+                            string CryptedData = CryptographyService.CodingToBase64(Values[i]);
+                            Keys.Add(CryptedData);
+                            Values.RemoveAt(i);
+                            i -= 1;
+                        });
+                        Thread.Sleep(1000);
+                    }
+                }
+            }
+        }
         public Thread thread { get; set; }
         public DispatcherTimer timer { get; set; }
         private ObservableCollection<string> keys;
@@ -46,67 +67,58 @@ namespace ThreadTask2.ViewModels
         public RelayCommand PauseCommand { get; set; }
         public RelayCommand ResumeCommand { get; set; }
 
-
+        public bool IsSuspended { get; set; }
 
         public MainViewModel()
         {
-
-            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += StartCoding;
-            timer.Start();
-
+            IsSuspended = false;
             Keys = new ObservableCollection<string>();
             Values = new ObservableCollection<string>();
 
             AddValueCommand = new RelayCommand((o) =>
             {
                 Values.Add(NewValue);
+                NewValue = String.Empty;
             });
 
             PlayCommand = new RelayCommand((o) =>
             {
-                timer.Start();
+                thread.Start();
             },
             (p) =>
             {
-                return !timer.IsEnabled;
-
+                return !thread.IsAlive;
             });
-
-
-
+            PauseCommand = new RelayCommand((o) =>
+            {
+                thread.Suspend();
+                IsSuspended = true;
+            },
+            (p) =>
+            {
+                return !IsSuspended;
+            });
+            ResumeCommand = new RelayCommand((o) =>
+            {
+                thread.Resume();
+                IsSuspended = false;
+            },
+            (p) =>
+            {
+                return IsSuspended;
+            });
 
             StopCommand = new RelayCommand((o) =>
             {
-                timer.Stop();
+                thread.Abort();
             },
             (p) =>
             {
-                return timer.IsEnabled;
+                return thread.IsAlive && !IsSuspended;
             });
-
-
-
+            thread = new Thread(() => { StartCoding(); });
         }
 
-        private void StartCoding(object sender, EventArgs e)
-        {
-            if (Values.Count > 0)
-            {
-                for (int i = 0; i < Values.Count; i++)
-                {
-                    Keys.Add(Values[i]);
-                    Values.RemoveAt(i);
-                    i -= 1;
-                    Thread.Sleep(1000);
-                }
-                //foreach (var item in Values)
-                //{
-                //    Keys.Add(item);
-                //    Values.Remove(item);
-                //    Thread.Sleep(1000);
-                //}
-            }
-        }
+
     }
 }
